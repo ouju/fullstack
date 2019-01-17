@@ -2,15 +2,25 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
 const Statistics = (props) => {
-  return (
-    <div>hyvä {props.good}
-      <p>neutraali {props.neutral}</p>
-      <p>huono {props.bad}</p>
-      <p>yhteensä {props.good + props.neutral + props.bad} </p>
-      <p>keskiarvo {(props.good*1 + props.neutral*0 + props.bad*-1) / (props.good + props.neutral + props.bad)}</p>
-      <p>positiivisia {props.good / (props.good + props.neutral + props.bad) * 100} %</p>
-    </div>
-  )
+  if (props.good === 0 && props.neutral === 0 && props.bad === 0) {
+    return (
+      <div>
+        <p>Ei yhtään palautetta annettu</p>
+      </div>
+    )
+  }
+  else {
+    return (
+      <div>
+        <p>hyvä {props.good}</p>
+        <p>neutraali {props.neutral}</p>
+        <p>huono {props.bad}</p>
+        <p>yhteensä {props.good + props.neutral + props.bad} </p>
+        <p>keskiarvo {(props.good*1 + props.neutral*0 + props.bad*-1) / (props.good + props.neutral + props.bad)}</p>
+        <p>positiivisia {props.good / (props.good + props.neutral + props.bad) * 100} %</p>
+      </div>
+    )
+  }
 }
 
 const App = () => {
