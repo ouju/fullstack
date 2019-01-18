@@ -1,44 +1,65 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+const Statistic = (props) => {
+  return (
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
+  )
+}
+
 const Statistics = (props) => {
-  if (props.good === 0 && props.neutral === 0 && props.bad === 0) {
+  if (props.allClicks.length !== 0) {
     return (
-      <div>
-        <p>Ei yhtään palautetta annettu</p>
-      </div>
+      <table>
+        <Statistic allClicks={props.allClicks} value={props.good} text='hyvä'/>
+        <Statistic allClicks={props.allClicks} value={props.neutral} text='neutraali'/>
+        <Statistic allClicks={props.allClicks} value={props.bad} text='huono'/>
+        <Statistic allClicks={props.allClicks} value={props.good + props.neutral + props.bad} text='yhteensä'/>
+        <Statistic allClicks={props.allClicks} value={(props.good*1 + props.neutral*0 + props.bad*-1) / (props.good + props.neutral + props.bad)} text='keskiarvo'/>
+        <Statistic allClicks={props.allClicks} value={props.good / (props.good + props.neutral + props.bad) * 100} text='positiivisia'/>
+      </table>
     )
-  }
-  else {
+  } else {
     return (
-      <div>
-        <p>hyvä {props.good}</p>
-        <p>neutraali {props.neutral}</p>
-        <p>huono {props.bad}</p>
-        <p>yhteensä {props.good + props.neutral + props.bad} </p>
-        <p>keskiarvo {(props.good*1 + props.neutral*0 + props.bad*-1) / (props.good + props.neutral + props.bad)}</p>
-        <p>positiivisia {props.good / (props.good + props.neutral + props.bad) * 100} %</p>
-      </div>
+      <p>Ei yhtään palautetta annettu</p>
     )
   }
 }
 
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>{text}</button>
+)
+
 const App = () => {
-  // tallenna napit omaan tilaansa
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [allClicks, setAll] = useState([])
+
+  const handleGoodClick = () => {
+    setAll(allClicks.concat('G'))
+    setGood(good + 1)
+  }
+  const handleNeutralClick = () => {
+    setAll(allClicks.concat('N'))
+    setNeutral(neutral + 1)
+  }
+  const handleBadClick = () => {
+    setAll(allClicks.concat('B'))
+    setBad(bad + 1)
+  }
 
   return (
     <div>
       <h1>anna palautetta</h1>
-      <div>
-        <button onClick={() => setGood(good + 1)}>hyvä</button>
-        <button onClick={() => setNeutral(neutral + 1)}>neutraali</button>
-        <button onClick={() => setBad(bad + 1)}>huono</button>
-      </div>
+      <Button handleClick={handleGoodClick} text='hyvä'/>
+      <Button handleClick={handleNeutralClick} text='neutraali'/>
+      <Button handleClick={handleBadClick} text='huono'/>
       <h1>statistiikka</h1>
-      <Statistics good={good} neutral={neutral} bad={bad}/>
+      <Statistics allClicks={allClicks} good={good} neutral={neutral} bad={bad}/>
     </div>
   )
 }
