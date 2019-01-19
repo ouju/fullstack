@@ -14,12 +14,14 @@ const Statistics = (props) => {
   if (props.allClicks.length !== 0) {
     return (
       <table>
-        <Statistic allClicks={props.allClicks} value={props.good} text='hyvä'/>
-        <Statistic allClicks={props.allClicks} value={props.neutral} text='neutraali'/>
-        <Statistic allClicks={props.allClicks} value={props.bad} text='huono'/>
-        <Statistic allClicks={props.allClicks} value={props.good + props.neutral + props.bad} text='yhteensä'/>
-        <Statistic allClicks={props.allClicks} value={(props.good*1 + props.neutral*0 + props.bad*-1) / (props.good + props.neutral + props.bad)} text='keskiarvo'/>
-        <Statistic allClicks={props.allClicks} value={props.good / (props.good + props.neutral + props.bad) * 100} text='positiivisia'/>
+        <tbody>
+          <Statistic allClicks={props.allClicks} value={props.good} text='hyvä'/>
+          <Statistic allClicks={props.allClicks} value={props.neutral} text='neutraali'/>
+          <Statistic allClicks={props.allClicks} value={props.bad} text='huono'/>
+          <Statistic allClicks={props.allClicks} value={props.good + props.neutral + props.bad} text='yhteensä'/>
+          <Statistic allClicks={props.allClicks} value={(props.good*1 + props.neutral*0 + props.bad*-1) / (props.good + props.neutral + props.bad)} text='keskiarvo'/>
+          <Statistic allClicks={props.allClicks} value={props.good / (props.good + props.neutral + props.bad) * 100} text='positiivisia'/>
+        </tbody>
       </table>
     )
   } else {
