@@ -1,34 +1,36 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const AnecdoteButton = (props) => {
+const AnecdoteButton = ({ setSelected}) => {
   return (
-    <button onClick={props.setSelected}>next anecdote</button>
+    <button onClick={setSelected}>next anecdote</button>
+  )
+}
+
+const Vote = ({ votes, selected, setVote }) => {
+  votes[selected] += 1
+  return (
+    <button onClick={() => setVote(votes)}>vote</button>
   )
 }
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
-  const [vote, setVote] = useState(Array.apply(null, new Array(props.anecdotes.length)).map(Number.prototype.valueOf,0))
+  const [vote, setVote] = useState(props.anecdotes.map(() => 0))
   const votes = [...vote]
   const random = Math.floor(Math.random() * props.anecdotes.length)
-  const mostVotes = Math.max.apply(null, votes)
-
-  const Vote = () => {
-    votes[selected] += 1
-    setVote(votes)
-  }
+  const mostVotes = Math.max(...votes)
   
   return (
     <div>
       <h1>Anecdote of the day</h1>
       <p>{props.anecdotes[selected]}</p>
       <p>has {vote[selected]} votes</p>
-      <button onClick={Vote}>vote</button>
+      <Vote votes={votes} selected={selected} setVote={setVote}/>
       <AnecdoteButton setSelected={() => setSelected(random)}/>
       <h1>Anecdote with most votes</h1>
       <p>{props.anecdotes[votes.indexOf(mostVotes)]}</p>
-      <p>has {votes[vote.indexOf(mostVotes)]} votes</p>
+      <p>has {mostVotes} votes</p>
     </div>
   )
 }
