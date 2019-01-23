@@ -1,28 +1,30 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const Header = props =>
-  <div>
-    {props.courses.map(courses => <div key={courses.id}><h1>{courses.name}</h1> {courses.parts.map(parts => <p key={parts.id}>{parts.name} {parts.exercises}</p>)} <p>yhteensä {courses.parts.reduce((prev, curr) => prev + curr.exercises, 0)} tehtävää</p></div>)}
-  </div>
+const Course = ({courses}) =>
+  courses.map(courses => 
+    <div key={courses.id}>
+      <Header name={courses.name}/>
+      <Content parts={courses.parts} /> 
+      <Total parts={courses.parts} />
+    </div>)
 
-/* const Total = props => {
-  const total = props.parts.reduce((prev, curr) => prev + curr.exercises, 0)
+const Header = ({name}) =>
+  <h1>{name}</h1>
+
+const Content = ({parts}) =>
+  parts.map(parts => 
+  <div key={parts.id}>
+    <Part name={parts.name} exercises={parts.exercises} />
+  </div>)
+
+const Part = ({name, exercises}) =>
+  <p>{name} {exercises}</p>
+
+const Total = ({parts}) => {
+  const total = parts.reduce((prev, curr) => prev + curr.exercises, 0)
   return <p>yhteensä {total} tehtävää</p>
 }
-
-const Content = props =>
-  <div>
-    {props.courses.map(courses => <h1 key={courses.id}>{courses.name}</h1>)}
-    {props.courses.map(courses => <p key={courses.id}>{courses.parts.name} {courses.parts.exercises}</p>)}
-  </div> */
-
-const Course = props =>
-  <div>
-    <Header courses={props.courses} />
-    {/* <Content courses={props.courses} /> */}
-    {/* <Total parts={props.courses.parts} /> */}
-  </div>
 
 const App = () => {
   const courses = [
