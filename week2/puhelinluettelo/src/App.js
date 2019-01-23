@@ -15,8 +15,13 @@ const App = (props) => {
       date: new Date().toISOString(),
       id: persons.length + 1
     }
-    setPersons(persons.concat(nameObject))
-    setNewName('')
+    
+    if (persons.some(e => e.content === nameObject.content)) {
+      window.alert(`${newName} on jo luettelossa`)
+    } else {
+      setPersons(persons.concat(nameObject))
+      setNewName('')
+    }
   }
 
   const handleNoteChange = (event) => {
