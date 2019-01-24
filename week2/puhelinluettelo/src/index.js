@@ -5,13 +5,15 @@ import App from './App'
 const names = [
   {
     id: 1,
-    content: 'Arto Hellas',
+    name: 'Arto Hellas',
+    number: '00000',
     date: '2017-12-10T17:30:31.098Z',
     important: true
   },
   {
     id: 2,
-    content: 'Matti Luukkainen',
+    name: 'Matti Luukkainen',
+    number: '1111',
     date: '2017-12-10T18:39:34.091Z',
     important: false
   }
