@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import axios from 'axios'
+import React, {useState, useEffect} from 'react'
 import Name from './components/Name'
 
 const Filter = ({filter, handleFilterChange}) =>
@@ -23,11 +24,22 @@ const PersonForm = ({addName, newName, handleNameChange, newNumber, handleNumber
 const Persons = ({personsToShow}) =>
   personsToShow.map(name => <Name key={name.id} name={name} />)
 
-const App = (props) => {
-  const [persons, setPersons] = useState(props.names) 
+const App = () => {
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
+  console.log('render', persons.length, 'persons')
 
   const addName = (event) => {
     event.preventDefault()
