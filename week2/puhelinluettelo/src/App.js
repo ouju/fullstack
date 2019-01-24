@@ -1,13 +1,33 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import Name from './components/Name'
 
-const App = (props) => {
-  const [ persons, setPersons] = useState(props.names) 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
+const Filter = ({filter, handleFilterChange}) =>
+  <p>rajaa näytettäviä: <input value={filter} onChange={handleFilterChange}/></p>
 
-  const rows = () => persons.map(name => 
-    <Name key={name.id} name={name} />)
+const PersonForm = ({addName, newName, handleNameChange, newNumber, handleNumberChange}) => {
+  return (
+    <form onSubmit={addName}>
+      <div>
+        nimi: <input value={newName} onChange={handleNameChange}/>
+      </div>
+      <div>
+        numero: <input value={newNumber} onChange={handleNumberChange}/>
+      </div>
+      <div>
+        <button type="submit">lisää</button>
+      </div>
+    </form>
+  )
+}
+
+const Persons = ({personsToShow}) =>
+  personsToShow.map(name => <Name key={name.id} name={name} />)
+
+const App = (props) => {
+  const [persons, setPersons] = useState(props.names) 
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
 
   const addName = (event) => {
     event.preventDefault()
@@ -35,22 +55,29 @@ const App = (props) => {
     setNewNumber(event.target.value)
   }
 
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+  }
+
+  const personsToShow = filter === ''
+    ? persons
+    : persons.filter(person => person.name.toUpperCase().includes(filter.toUpperCase()))
+
   return (
     <div>
-      <h2>Puhelinluettelo</h2>
-      <form onSubmit={addName}>
-        <div>
-          nimi: <input value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          numero: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">lisää</button>
-        </div>
-      </form>
+      <h1>Puhelinluettelo</h1>
+      <Filter filter={filter} handleFilterChange={handleFilterChange} />
+      
+      <h2>lisää uusi</h2>
+      <PersonForm addName={addName} 
+        newName={newName} 
+        handleNameChange={handleNameChange} 
+        newNumber={newNumber} 
+        handleNumberChange={handleNumberChange} 
+      />
+      
       <h2>Numerot</h2>
-      {rows()}
+      <Persons personsToShow={personsToShow} />
     </div>
   )
 }
