@@ -17,21 +17,30 @@ const Country = ({filteredData}) =>
     </div>
   )
 
-const Countries = ({filteredData, filter}) => {
+const Countries = ({filteredData, filter, selectedCountry, handleSelectCountry}) => {
   if (filter === '') {
     return ([])
+
   } else if (filteredData.length > 10) {
     return ('Too many matches, specify another filter')
+  } else if (selectedCountry) {
+    return (<Country filteredData={[selectedCountry]} />)
   } else if (filteredData.length === 1) {
     return (<Country filteredData={filteredData} />)
   } else {
-    return (filteredData.map(country => <p key={country.name}>{country.name}</p>))
+    return (
+      filteredData.map(country => 
+      <p key={country.name}>{country.name} 
+      <button onClick={() => 
+      handleSelectCountry(country)}>Show</button></p>)
+    )
   }
 }
 
 const App = () => {
   const [countries, setCountry] = useState([])
   const [filter, setFilter] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState({})
 
   useEffect(() => {
     console.log('effect')
@@ -46,6 +55,11 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value)
+    setSelectedCountry({})
+  }
+
+  const handleSelectCountry = (country) => {
+    setSelectedCountry(country)
   }
 
   const filteredData = countries.filter(country => country.name.toUpperCase().includes(filter.toUpperCase()))
@@ -53,7 +67,12 @@ const App = () => {
   return (
     <div>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
-      <Countries filteredData={filteredData} filter={filter}/>
+      <Countries 
+        filteredData={filteredData} 
+        filter={filter} 
+        selectedCountry={selectedCountry && selectedCountry.name ? selectedCountry : null} 
+        handleSelectCountry={handleSelectCountry}
+      />
     </div>
   )
 }
