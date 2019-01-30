@@ -41,15 +41,18 @@ const App = () => {
   }, [])
   console.log('render', persons.length, 'persons')
 
+
   const addName = (event) => {
     event.preventDefault()
     const nameObject = {
       name: newName,
       number: newNumber,
-      date: new Date().toISOString(),
-      id: persons.length + 1
+      date: new Date().toISOString()
     }
-    
+
+    axios
+    .post('http://localhost:3001/persons', nameObject)
+
     if (persons.some(e => e.name === nameObject.name)) {
       window.alert(`${newName} on jo luettelossa`)
     } else {
