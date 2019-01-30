@@ -14,6 +14,8 @@ const Country = ({filteredData}) =>
       {country.languages.map(lang => 
       <li key={lang.name}>{lang.name}</li>)} 
       <p><img src={country.flag} alt='Flag' width="150" /></p>
+      <h2>Weather in {country.capital}</h2>
+      <p>See www.foreca.fi :)</p>
     </div>
   )
 
