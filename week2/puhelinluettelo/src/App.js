@@ -49,8 +49,18 @@ const App = () => {
       date: new Date().toISOString()
     }
 
-    if (persons.some(e => e.name === nameObject.name)) {
-      window.alert(`${newName} on jo luettelossa`)
+    const oldPersonArray = persons.filter(e => e.name === nameObject.name)
+    if (oldPersonArray.length > 0) {
+      if (window.confirm(`${newName} on jo luettelossa, korvataanko vanha numero uudella?`)) {
+        const oldPerson = oldPersonArray[0]
+        personService
+          .update(oldPerson.id, nameObject)
+            .then(returnedPerson => {
+              setPersons(persons.map(person => oldPerson.id === person.id ? 
+                { ...returnedPerson, id: person.id }
+                : person ))
+            })
+      }
     } else {
       personService
         .create(nameObject)
