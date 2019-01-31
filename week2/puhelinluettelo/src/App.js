@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, {useState, useEffect} from 'react'
 import Name from './components/Name'
+import personService from './services/persons'
 
 const Filter = ({filter, handleFilterChange}) =>
   <p>rajaa näytettäviä: <input value={filter} onChange={handleFilterChange}/></p>
@@ -31,13 +32,11 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
+    personService
+      .getAll()
+        .then(initialPersons => {
+          setPersons(initialPersons)
+        })
   }, [])
   console.log('render', persons.length, 'persons')
 
@@ -50,15 +49,16 @@ const App = () => {
       date: new Date().toISOString()
     }
 
-    axios
-    .post('http://localhost:3001/persons', nameObject)
-
     if (persons.some(e => e.name === nameObject.name)) {
       window.alert(`${newName} on jo luettelossa`)
     } else {
-      setPersons(persons.concat(nameObject))
-      setNewName('')
-      setNewNumber('')
+      personService
+        .create(nameObject)
+          .then(newName => {
+            setPersons(persons.concat(newName))
+            setNewName('')
+            setNewNumber('')
+        })
     }
   }
 
