@@ -22,8 +22,8 @@ const PersonForm = ({addName, newName, handleNameChange, newNumber, handleNumber
   )
 }
 
-const Persons = ({personsToShow}) =>
-  personsToShow.map(name => <Name key={name.id} name={name} />)
+const Persons = ({personsToShow, handleDelete}) =>
+  personsToShow.map(person => <div><Name key={person.id} person={person} /><button onClick={() => {handleDelete(person)}}>poista</button></div>)
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -74,6 +74,15 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const handleDelete = (person) => {
+    if (window.confirm(`Poistetaanko ${person.name}?`)) {
+      personService.del(person.id)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== person.id))
+      })
+    }
+  }
+
   const personsToShow = filter === ''
     ? persons
     : persons.filter(person => person.name.toUpperCase().includes(filter.toUpperCase()))
@@ -92,7 +101,7 @@ const App = () => {
       />
       
       <h2>Numerot</h2>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} handleDelete={handleDelete} />
     </div>
   )
 }
