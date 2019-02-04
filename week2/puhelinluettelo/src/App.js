@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, {useState, useEffect} from 'react'
 import Name from './components/Name'
 import personService from './services/persons'
+import './App.css'
 
 const Filter = ({filter, handleFilterChange}) =>
   <p>rajaa näytettäviä: <input value={filter} onChange={handleFilterChange}/></p>
@@ -25,11 +26,33 @@ const PersonForm = ({addName, newName, handleNameChange, newNumber, handleNumber
 const Persons = ({personsToShow, handleDelete}) =>
   personsToShow.map(person => <div><Name key={person.id} person={person} /><button onClick={() => {handleDelete(person)}}>poista</button></div>)
 
+const Notification = ({message, className}) => {
+  console.log({className})
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={className}>
+      {message}
+    </div>
+  )
+  //} else if (successMessage !== null) {
+  //  return (
+  //    <div className="success">
+  //      {successMessage}
+  //    </div>
+  //  )
+  //}
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [className, setClassName] = useState('')
 
   useEffect(() => {
     personService
@@ -59,7 +82,25 @@ const App = () => {
               setPersons(persons.map(person => oldPerson.id === person.id ? 
                 { ...returnedPerson, id: person.id }
                 : person ))
-            })
+              setNewName('')
+              setNewNumber('')
+              setErrorMessage(
+                `muutettiin henkilön '${newName}' numero onnistuneesti`
+              )
+              setClassName ("success")
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 5000)
+          })
+          .catch(error => {
+            setErrorMessage(
+              `henkilö '${newName}' on jo poistettu palvelimelta`
+            )
+            setClassName ("error")
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
       }
     } else {
       personService
@@ -68,6 +109,13 @@ const App = () => {
             setPersons(persons.concat(newName))
             setNewName('')
             setNewNumber('')
+            setErrorMessage(
+              `lisättiin henkilö '${newName.name}' onnistuneesti`
+            )
+            setClassName ("success")
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
         })
     }
   }
@@ -89,6 +137,13 @@ const App = () => {
       personService.del(person.id)
       .then(() => {
         setPersons(persons.filter(p => p.id !== person.id))
+        setErrorMessage(
+          `poistettiin henkilö '${person.name}' onnistuneesti`
+        )
+        setClassName ("success")
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
     }
   }
@@ -100,6 +155,7 @@ const App = () => {
   return (
     <div>
       <h1>Puhelinluettelo</h1>
+      <Notification message={errorMessage} className={className} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       
       <h2>lisää uusi</h2>
